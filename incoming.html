@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livestock Monitoring System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #9d7cbe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #8633ec, #feca57);
+            border-radius: 15px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #243b19, #50d7aa);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(86, 171, 47, 0.4);
+        }
+
+        .btn-danger {
+            background:  #da1744;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.4);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .table-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        tr:hover td {
+            background-color: #f8f9ff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+            position: relative;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ff416c;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #750971;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #c6320a;
+        }
+
+        .status-rejected {
+            background: #e82939;
+            color: #721c24;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> Livestock Monitoring System</h1>
+            <p>Comprehensive tracking of livestock and meat processing </p>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search " id="searchInput">
+                <button class="btn btn-primary" onclick="searchTable()"> Search</button>
+            </div>
+            <button class="btn btn-success" onclick="openAddModal()"> Add New Record</button>
+        </div>
+
+        <div class="main-content">
+            <div class="table-section">
+                <h2 class="section-title"> Livestock Tracking Records</h2>
+                <div class="table-container">
+                    <table id="livestockTable">
+                        <thead>
+                            <tr>
+                                <th>Traceable ID</th>
+                                <th>Livestock Type</th>
+                                <th>Quantity</th>
+                                <th>Processing Date</th>
+                                <th>Processing Unit</th>
+                                <th>Quality Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td>LV001</td>
+                                <td>Cattle</td>
+                                <td>25</td>
+                                <td>2024-01-15</td>
+                                <td>Unit A</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LV002</td>
+                                <td>Goat</td>
+                                <td>40</td>
+                                <td>2024-01-16</td>
+                                <td>Unit B</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LV003</td>
+                                <td>Sheep</td>
+                                <td>30</td>
+                                <td>2024-01-17</td>
+                                <td>Unit C</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h2 class="section-title">Quality Control Summary</h2>
+                <div class="chart-container">
+                    <canvas id="qualityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="recordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add New Livestock </h2>
+            <form id="recordForm">
+                <div class="form-group">
+                    <label for="TraceableId">Traceable ID:</label>
+                    <input type="text" id="TraceableId" name="TraceableId" required>
+                </div>
+                <div class="form-group">
+                    <label for="livestockType">Livestock Type:</label>
+                    <select id="livestockType" name="livestockType" required>
+                        <option value="">Select Type</option>
+                        <option value="Cattle">Cattle</option>
+                        <option value="Goat">Goat</option>
+                        <option value="Sheep">Sheep</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Buffalo">Buffalo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="processingDate">Processing Date:</label>
+                    <input type="date" id="processingDate" name="processingDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="processingUnit">Processing Unit:</label>
+                    <select id="processingUnit" name="processingUnit" required>
+                        <option value="">Select Unit</option>
+                        <option value="Unit A">Unit A</option>
+                        <option value="Unit B">Unit B</option>
+                        <option value="Unit C">Unit C</option>
+                        <option value="Unit D">Unit D</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="qualityStatus">Quality Status:</label>
+                    <select id="qualityStatus" name="qualityStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let editingRow = null;
+        let chartInstance = null;
+
+        // Initialize chart
+        function initChart() {
+            const ctx = document.getElementById('qualityChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            
+            chartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: getQualityData(),
+                        backgroundColor: [
+                            '#56ab2f',
+                            '#ffa726',
+                            '#ff416c'
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 16 },
+                            bodyFont: { size: 14 },
+                            cornerRadius: 10
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        duration: 1000
+                    }
+                }
+            });
+        }
+
+        function getQualityData() {
+            const rows = document.querySelectorAll('#tableBody tr');
+            let approved = 0, pending = 0, rejected = 0;
+            
+            rows.forEach(row => {
+                const status = row.cells[5].textContent.toLowerCase();
+                if (status.includes('approved')) approved++;
+                else if (status.includes('pending')) pending++;
+                else if (status.includes('rejected')) rejected++;
+            });
+            
+            return [approved, pending, rejected];
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Livestock Record';
+            document.getElementById('recordForm').reset();
+            document.getElementById('recordModal').style.display = 'block';
+            editingRow = null;
+        }
+
+        function closeModal() {
+            document.getElementById('recordModal').style.display = 'none';
+            editingRow = null;
+        }
+
+        function editRecord(button) {
+            const row = button.closest('tr');
+            editingRow = row;
+            
+            document.getElementById('modalTitle').textContent = 'Edit Livestock Record';
+            document.getElementById('batchId').value = row.cells[0].textContent;
+            document.getElementById('livestockType').value = row.cells[1].textContent;
+            document.getElementById('quantity').value = row.cells[2].textContent;
+            document.getElementById('processingDate').value = row.cells[3].textContent;
+            document.getElementById('processingUnit').value = row.cells[4].textContent;
+            
+            const statusText = row.cells[5].textContent.toLowerCase();
+            if (statusText.includes('approved')) document.getElementById('qualityStatus').value = 'Approved';
+            else if (statusText.includes('pending')) document.getElementById('qualityStatus').value = 'Pending';
+            else if (statusText.includes('rejected')) document.getElementById('qualityStatus').value = 'Rejected';
+            
+            document.getElementById('recordModal').style.display = 'block';
+        }
+
+        function deleteRecord(button) {
+            if (confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
+                const row = button.closest('tr');
+                row.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    row.remove();
+                    updateChart();
+                }, 300);
+            }
+        }
+
+        function getStatusBadge(status) {
+            const statusClass = status.toLowerCase() === 'approved' ? 'status-approved' : 
+                              status.toLowerCase() === 'pending' ? 'status-pending' : 'status-rejected';
+            return `<span class="status-badge ${statusClass}">${status}</span>`;
+        }
+
+        function updateChart() {
+            if (chartInstance) {
+                chartInstance.data.datasets[0].data = getQualityData();
+                chartInstance.update();
+            }
+        }
+
+        function searchTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                    row.style.animation = 'fadeIn 0.3s ease-in';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Form submission
+        document.getElementById('recordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            if (editingRow) {
+                // Update existing row
+                editingRow.cells[0].textContent = data.batchId;
+                editingRow.cells[1].textContent = data.livestockType;
+                editingRow.cells[2].textContent = data.quantity;
+                editingRow.cells[3].textContent = data.processingDate;
+                editingRow.cells[4].textContent = data.processingUnit;
+                editingRow.cells[5].innerHTML = getStatusBadge(data.qualityStatus);
+            } else {
+                // Add new row
+                const tbody = document.getElementById('tableBody');
+                const newRow = tbody.insertRow();
+                newRow.innerHTML = `
+                    <td>${data.batchId}</td>
+                    <td>${data.livestockType}</td>
+                    <td>${data.quantity}</td>
+                    <td>${data.processingDate}</td>
+                    <td>${data.processingUnit}</td>
+                    <td>${getStatusBadge(data.qualityStatus)}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
+                    </td>
+                `;
+                newRow.style.animation = 'fadeIn 0.5s ease-in';
+            }
+            
+            updateChart();
+            closeModal();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('recordModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchTable();
+            }
+        });
+
+        // Initialize chart on page load
+        window.addEventListener('load', function() {
+            initChart();
+        });
+
+        // Add fade animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
