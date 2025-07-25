@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Login</title>
+    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <style>
+      .mtp-login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(120deg, var(--mtp-red) 60%, var(--mtp-green) 100%);
+      }
+      .mtp-login-box {
+        background: var(--mtp-light);
+        padding: 2.5rem 2rem 2rem 2rem;
+        border-radius: 1.2rem;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.13);
+        width: 100%;
+        max-width: 370px;
+        text-align: center;
+      }
+      .mtp-login-logo {
+        color: var(--mtp-red);
+        font-size: 2.2rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        margin-bottom: 1.2rem;
+      }
+      .mtp-login-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--mtp-dark);
+      }
+      .mtp-login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+      }
+      .mtp-login-form input[type="email"],
+      .mtp-login-form input[type="password"] {
+        padding: 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+        background: #fafafa;
+      }
+      .mtp-login-form label {
+        text-align: left;
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 0.2rem;
+      }
+      .mtp-login-form .mtp-login-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.97rem;
+        margin-bottom: 0.5rem;
+      }
+      .mtp-login-form .mtp-login-options label {
+        margin-bottom: 0;
+        color: var(--mtp-dark);
+        font-weight: 400;
+      }
+      .mtp-login-form .mtp-login-options a {
+        color: var(--mtp-red);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .mtp-login-form .mtp-login-options a:hover {
+        color: var(--mtp-green);
+      }
+      .mtp-login-form button {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      .mtp-login-footer {
+        margin-top: 1.5rem;
+        font-size: 0.98rem;
+        color: #888;
+      }
+      @media (max-width: 500px) {
+        .mtp-login-box {
+          padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mtp-login-wrapper">
+      <div class="mtp-login-box">
+        <div class="mtp-login-logo">
+          <i class="fas fa-drumstick-bite"></i>
+          <span>MeatTrack Pro</span>
+        </div>
+        <div class="mtp-login-title">Sign in to your account</div>
+        <form class="mtp-login-form">
+          <div>
+            <label for="mtp-login-email">Email</label>
+            <input type="email" id="mtp-login-email" name="email" placeholder="Enter your email" required />
+          </div>
+          <div>
+            <label for="mtp-login-password">Password</label>
+            <input type="password" id="mtp-login-password" name="password" placeholder="Enter your password" required />
+          </div>
+          <div class="mtp-login-options">
+            <label><input type="checkbox" name="remember" /> Remember Me</label>
+            <a href="#">Forgot Password?</a>
+          </div>
+          <button type="submit" class="mtp-btn mtp-btn-primary">Log In</button>
+        </form>
+        <div class="mtp-login-footer">
+          &copy; 2024 MeatTrack Pro
+        </div>
+      </div>
+    </div>
+  </body>
+</html> 
