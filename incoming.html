@@ -1,112 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livestock Monitoring System</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Livestock </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #9d7cbe 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+      :root {
+        --itp-red: #ae2b2b;
+        --itp-green: #2f6d2f;
+        --itp-dark: #232d2d;
+        --itp-light: #ffffff;
+        --itp-gray: #f5f5f5;
+      }
+      
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      body { 
+        background: var(--itp-gray); 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      .itp-dashboard-wrapper { display: flex; min-height: 100vh; }
+      
+      .itp-sidebar { 
+        width: 240px; 
+        background: var(--itp-dark); 
+        color: var(--itp-light); 
+        display: flex; 
+        flex-direction: column; 
+        padding: 2rem 1rem 1rem 1rem; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        bottom: 0; 
+        z-index: 100; 
+      }
+      
+      .itp-sidebar-logo { 
+        font-size: 1.5rem; 
+        font-weight: bold; 
+        color: var(--itp-red); 
+        display: flex; 
+        align-items: center; 
+        gap: 0.5rem; 
+        margin-bottom: 2.5rem; 
+      }
+      
+      .itp-sidebar-nav { flex: 1; }
+      
+      .itp-sidebar-nav ul { 
+        list-style: none; 
+        padding: 0; 
+        margin: 0; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 1.2rem; 
+      }
+      
+      .itp-sidebar-nav a { 
+        color: var(--itp-light); 
+        text-decoration: none; 
+        font-size: 1.08rem; 
+        display: flex; 
+        align-items: center; 
+        gap: 0.7rem; 
+        padding: 0.5rem 1rem; 
+        border-radius: 0.5rem; 
+        transition: background 0.18s; 
+      }
+      
+      .itp-sidebar-nav a.active, 
+      .itp-sidebar-nav a:hover { 
+        background: var(--itp-red); 
+        color: var(--itp-light); 
+      }
+      
+      .itp-dashboard-main { 
+        margin-left: 240px; 
+        padding: 2.5rem 2rem 2rem 2rem; 
+        width: 100%; 
+      }
+       .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
+      }
+      .modal-content {
+            background-color: white;
+            margin: 20px auto;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+            position: relative;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: linear-gradient(135deg, #8633ec, #feca57);
-            border-radius: 15px;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      .itp-dashboard-header {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--itp-dark);
+        margin-bottom: 2rem;
+      }
+      
+      @media (max-width: 900px) {
+        .itp-dashboard-main { 
+          margin-left: 0; 
+          padding: 1.2rem 0.5rem; 
         }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-            animation: fadeInDown 1s ease-out;
+        .itp-sidebar { 
+          position: static; 
+          width: 100%; 
+          flex-direction: row; 
+          align-items: center; 
+          justify-content: space-between; 
+          padding: 1rem; 
         }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
+        .itp-sidebar-nav ul { 
+          flex-direction: row; 
+          gap: 0.7rem; 
         }
-
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .search-box {
-            flex: 1;
-            padding: 12px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .search-box:focus {
+      }
+      
+      .itp-section { 
+        background: var(--itp-light); 
+        border-radius: 1rem; 
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08); 
+        padding: 2rem 1.2rem; 
+        margin-bottom: 2rem; 
+      }
+      
+      .itp-section h3 { 
+        color: var(--itp-green); 
+        margin-bottom: 1rem; 
+        font-size: 1.2rem; 
+      }
+      
+      .itp-table-wrapper { overflow-x: auto; }
+      
+      table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-bottom: 1rem; 
+      }
+      
+      th, td { 
+        padding: 0.7rem; 
+        border-bottom: 1px solid #eee; 
+        text-align: left; 
+      }
+      
+      th { 
+        background: var(--itp-gray); 
+        color: var(--itp-dark); 
+        font-weight: 600;
+      }
+      
+      .itp-table-actions button { margin-right: 0.5rem; }
+      
+      .itp-search-bar { 
+        margin-bottom: 1rem; 
+        display: flex; 
+        gap: 0.5rem; 
+        flex-wrap: wrap;
+      }
+      
+      .itp-search-bar input { 
+        padding: 0.5rem; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        width: 200px; 
+      }
+      
+      .itp-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      
+      .itp-btn-primary {
+        background: var(--itp-red);
+        color: var(--itp-light);
+      }
+      
+      .itp-btn-primary:hover {
+        background: #8b1a1a;
+      }
+      
+      .itp-btn-secondary {
+        background: var(--itp-green);
+        color: var(--itp-light);
+      }
+      
+      .search-box:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
             transform: translateY(-2px);
-        }
+      }
+      .itp-charts-flex { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 2rem; 
+      }
+      body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
 
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
+    h2 {
+      margin-bottom: 20px;
+    }
+      
+     
+      .chart-container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap; /* Optional: makes it responsive */
+    }
+     .chart-box {
+      background: #f8f8f8;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+     .btn-success {
             background: linear-gradient(135deg, #243b19, #50d7aa);
             color: white;
         }
@@ -125,120 +265,7 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(255, 65, 108, 0.4);
         }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .table-section {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .chart-section {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #333;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
-
-        th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px 10px;
-            text-align: left;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-        }
-
-        td {
-            padding: 15px 10px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background-color 0.3s ease;
-        }
-
-        tr:hover td {
-            background-color: #f8f9ff;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-sm {
-            padding: 8px 15px;
-            font-size: 14px;
-            border-radius: 20px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            overflow-y: auto;
-            padding: 20px 0;
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 20px auto;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: modalSlideIn 0.3s ease-out;
-            position: relative;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .close {
+         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
@@ -251,6 +278,7 @@
             color: #ff416c;
         }
 
+    
         .form-group {
             margin-bottom: 20px;
         }
@@ -277,153 +305,180 @@
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
         }
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-        }
+    canvas {
+      width: 400px !important;
+      height: 400px !important;
+    }
 
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin-top: 20px;
-        }
-
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-approved {
-            background: #d4edda;
-            color: #750971;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #c6320a;
-        }
-
-        .status-rejected {
-            background: #e82939;
-            color: #721c24;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .search-container {
-                min-width: auto;
-            }
-        }
+      
+      .itp-logout-btn { 
+        border: 2px solid var(--itp-red); 
+        color: var(--itp-red); 
+        background: transparent; 
+        font-weight: 600; 
+        margin-top: 2rem; 
+        transition: background 0.2s, color 0.2s; 
+      }
+      
+      .itp-logout-btn:hover { 
+        background: var(--itp-red); 
+        color: var(--itp-light); 
+      }
+      
+      .status-badge {
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      
+      .status-in-stock {
+        background: #d4edda;
+        color: #155724;
+      }
+      
+      .status-low-stock {
+        background: #fff3cd;
+        color: #856404;
+      }
+      
+      .status-out-stock {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      
+      @media (max-width: 900px) { 
+        .itp-logout-btn { 
+          margin-top: 0.5rem; 
+          margin-left: 1rem; 
+          display: inline-block; 
+        } 
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1> Livestock Monitoring System</h1>
-            <p>Comprehensive tracking of livestock and meat processing </p>
+  </head>
+  <script>
+  function openModal() {
+    document.getElementById('recordModal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('recordModal').style.display = 'none';
+  }
+
+  // Optional: close modal when clicking outside of modal content
+  window.onclick = function(event) {
+    const modal = document.getElementById('recordModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>
+
+  <body>
+    <div class="itp-dashboard-wrapper">
+      <aside class="itp-sidebar">
+        <div class="itp-sidebar-logo">
+          <i class="fas fa-boxes"></i>
+          <span>MeatTrack Pro</span>
         </div>
+        <nav class="itp-sidebar-nav">
+          <ul>
+            <li><a href="meat-data.html"><i class="fas fa-info-circle"></i>Meat Product Data</a></li>
+            <li><a href="incoming.html"><i class="fas fa-truck-loading"></i>Incoming Livestock/Meat</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse"></i>Stock Levels</a></li>
+            <li><a href="expiration.html"><i class="fas fa-calendar-alt"></i>Expiration & Batch</a></li>
+            <li><a href="storage.html"><i class="fas fa-thermometer-half"></i>Storage Conditions</a></li>
+            <li><a href="yield.html"><i class="fas fa-chart-line"></i>Yield Analysis</a></li>
+            <li><a href="compliance.html"><i class="fas fa-clipboard-check"></i>Compliance & Recall</a></li>
+          </ul>
+          <a href="index.html" class="itp-btn itp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+      </aside>
+      
+      <main class="itp-dashboard-main">
+        <div class="itp-dashboard-header">Livestock</div>
+        
+        <section class="itp-section">
+          <h3>Current Inventory Levels</h3>
+          <div class="itp-search-bar">
+            <input type="text" class="search-box" placeholder="Search " id="searchInput">
+                <button class="itp-btn itp-btn-primary" onclick="searchTable()"> Search</button>
+                <button class="itp-btn itp-btn-secondary" onclick="openModal()">Add New Record</button>
 
-        <div class="controls">
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search " id="searchInput">
-                <button class="btn btn-primary" onclick="searchTable()"> Search</button>
-            </div>
-            <button class="btn btn-success" onclick="openAddModal()"> Add New Record</button>
-        </div>
-
-        <div class="main-content">
-            <div class="table-section">
-                <h2 class="section-title"> Livestock Tracking Records</h2>
-                <div class="table-container">
-                    <table id="livestockTable">
-                        <thead>
-                            <tr>
-                                <th>Traceable ID</th>
-                                <th>Livestock Type</th>
-                                <th>Quantity</th>
-                                <th>Processing Date</th>
-                                <th>Processing Unit</th>
-                                <th>Quality Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <tr>
-                                <td>LV001</td>
-                                <td>Cattle</td>
-                                <td>25</td>
-                                <td>2024-01-15</td>
-                                <td>Unit A</td>
-                                <td><span class="status-badge status-approved">Approved</span></td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>LV002</td>
-                                <td>Goat</td>
-                                <td>40</td>
-                                <td>2024-01-16</td>
-                                <td>Unit B</td>
-                                <td><span class="status-badge status-pending">Pending</span></td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>LV003</td>
-                                <td>Sheep</td>
-                                <td>30</td>
-                                <td>2024-01-17</td>
-                                <td>Unit C</td>
-                                <td><span class="status-badge status-approved">Approved</span></td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="chart-section">
-                <h2 class="section-title">Quality Control Summary</h2>
-                <div class="chart-container">
-                    <canvas id="qualityChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add/Edit Modal -->
-    <div id="recordModal" class="modal">
+        
+          </div>
+          <div class="itp-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Traceable ID</th>
+                  <th>Livestock Type</th>
+                  <th>Quantity</th>
+                  <th>Processing Date</th>
+                  <th>Processing Unit</th>
+                  <th>Quality Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                   <td>LV001</td>
+                   <td>Cattle</td>
+                   <td>25</td>
+                   <td>2024-01-15</td>
+                   <td>Unit A</td>
+                  <td><span class="status-badge status-in-stock">Approaved</span></td>
+                
+                  <td class="itp-table-actions">
+                    <button class="itp-btn itp-btn-secondary">Edit</button>
+                    <button class="itp-btn itp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>LV002</td>
+                   <td>Beef</td>
+                   <td>250</td>
+                   <td>2024-01-29</td>
+                   <td>Unit B</td>
+                  <td><span class="status-badge status-in-stock">Approaved</span></td>
+                
+                  <td class="itp-table-actions">
+                    <button class="itp-btn itp-btn-secondary">Edit</button>
+                    <button class="itp-btn itp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>LV003</td>
+                   <td>sheep</td>
+                   <td>200</td>
+                   <td>2024-01-15</td>
+                   <td>Unit D</td>
+                  <td><span class="status-badge status-in-stock">Pending</span></td>
+                
+                  <td class="itp-table-actions">
+                    <button class="itp-btn itp-btn-secondary">Edit</button>
+                    <button class="itp-btn itp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                   <td>LV004</td>
+                   <td>Chichen</td>
+                   <td>2500</td>
+                   <td>2024-08-15</td>
+                   <td>Unit C</td>
+                  <td><span class="status-badge status-in-stock">Approaved</span></td>
+                
+                  <td class="itp-table-actions">
+                    <button class="itp-btn itp-btn-secondary">Edit</button>
+                    <button class="itp-btn itp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+        <section>
+           <div id="recordModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 id="modalTitle">Add New Livestock </h2>
@@ -477,218 +532,80 @@
             </form>
         </div>
     </div>
-
-    <script>
-        let editingRow = null;
-        let chartInstance = null;
-
-        // Initialize chart
-        function initChart() {
-            const ctx = document.getElementById('qualityChart').getContext('2d');
-            
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-            
-            chartInstance = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Approved', 'Pending', 'Rejected'],
-                    datasets: [{
-                        data: getQualityData(),
-                        backgroundColor: [
-                            '#56ab2f',
-                            '#ffa726',
-                            '#ff416c'
-                        ],
-                        borderWidth: 3,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleFont: { size: 16 },
-                            bodyFont: { size: 14 },
-                            cornerRadius: 10
-                        }
-                    },
-                    animation: {
-                        animateRotate: true,
-                        duration: 1000
-                    }
-                }
-            });
-        }
-
-        function getQualityData() {
-            const rows = document.querySelectorAll('#tableBody tr');
-            let approved = 0, pending = 0, rejected = 0;
-            
-            rows.forEach(row => {
-                const status = row.cells[5].textContent.toLowerCase();
-                if (status.includes('approved')) approved++;
-                else if (status.includes('pending')) pending++;
-                else if (status.includes('rejected')) rejected++;
-            });
-            
-            return [approved, pending, rejected];
-        }
-
-        function openAddModal() {
-            document.getElementById('modalTitle').textContent = 'Add New Livestock Record';
-            document.getElementById('recordForm').reset();
-            document.getElementById('recordModal').style.display = 'block';
-            editingRow = null;
-        }
-
-        function closeModal() {
-            document.getElementById('recordModal').style.display = 'none';
-            editingRow = null;
-        }
-
-        function editRecord(button) {
-            const row = button.closest('tr');
-            editingRow = row;
-            
-            document.getElementById('modalTitle').textContent = 'Edit Livestock Record';
-            document.getElementById('batchId').value = row.cells[0].textContent;
-            document.getElementById('livestockType').value = row.cells[1].textContent;
-            document.getElementById('quantity').value = row.cells[2].textContent;
-            document.getElementById('processingDate').value = row.cells[3].textContent;
-            document.getElementById('processingUnit').value = row.cells[4].textContent;
-            
-            const statusText = row.cells[5].textContent.toLowerCase();
-            if (statusText.includes('approved')) document.getElementById('qualityStatus').value = 'Approved';
-            else if (statusText.includes('pending')) document.getElementById('qualityStatus').value = 'Pending';
-            else if (statusText.includes('rejected')) document.getElementById('qualityStatus').value = 'Rejected';
-            
-            document.getElementById('recordModal').style.display = 'block';
-        }
-
-        function deleteRecord(button) {
-            if (confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
-                const row = button.closest('tr');
-                row.style.animation = 'fadeOut 0.3s ease-out';
-                setTimeout(() => {
-                    row.remove();
-                    updateChart();
-                }, 300);
-            }
-        }
-
-        function getStatusBadge(status) {
-            const statusClass = status.toLowerCase() === 'approved' ? 'status-approved' : 
-                              status.toLowerCase() === 'pending' ? 'status-pending' : 'status-rejected';
-            return `<span class="status-badge ${statusClass}">${status}</span>`;
-        }
-
-        function updateChart() {
-            if (chartInstance) {
-                chartInstance.data.datasets[0].data = getQualityData();
-                chartInstance.update();
-            }
-        }
-
-        function searchTable() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.querySelectorAll('#tableBody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                    row.style.animation = 'fadeIn 0.3s ease-in';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        // Form submission
-        document.getElementById('recordForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            if (editingRow) {
-                // Update existing row
-                editingRow.cells[0].textContent = data.batchId;
-                editingRow.cells[1].textContent = data.livestockType;
-                editingRow.cells[2].textContent = data.quantity;
-                editingRow.cells[3].textContent = data.processingDate;
-                editingRow.cells[4].textContent = data.processingUnit;
-                editingRow.cells[5].innerHTML = getStatusBadge(data.qualityStatus);
-            } else {
-                // Add new row
-                const tbody = document.getElementById('tableBody');
-                const newRow = tbody.insertRow();
-                newRow.innerHTML = `
-                    <td>${data.batchId}</td>
-                    <td>${data.livestockType}</td>
-                    <td>${data.quantity}</td>
-                    <td>${data.processingDate}</td>
-                    <td>${data.processingUnit}</td>
-                    <td>${getStatusBadge(data.qualityStatus)}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-success btn-sm" onclick="editRecord(this)">✏️ Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteRecord(this)">🗑️ Delete</button>
-                    </td>
-                `;
-                newRow.style.animation = 'fadeIn 0.5s ease-in';
-            }
-            
-            updateChart();
-            closeModal();
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('recordModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Search on Enter key
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchTable();
-            }
-        });
-
-        // Initialize chart on page load
-        window.addEventListener('load', function() {
-            initChart();
-        });
-
-        // Add fade animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes fadeOut {
-                from { opacity: 1; transform: translateY(0); }
-                to { opacity: 0; transform: translateY(-10px); }
-            }
-        `;
-        document.head.appendChild(style);
+          
+      
     </script>
 </body>
+<h2>Pie Chart</h2>
+ <div class="chart-container">
+    <div class="chart-box">
+      <canvas id="animalTypeChart"></canvas>
+    </div>
+    
+  <canvas id="animalTypeChart" width="80" height="80"></canvas>
+
 </html>
+<script>
+  
+      // Animal Type Pie Chart
+      new Chart(document.getElementById('animalTypeChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Approved', 'Rejected', 'Pending'],
+          datasets: [{
+            data: [10, 7, 5],
+            backgroundColor: ['#b22222', '#228b22', '#e57373']
+          }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+      
+      
+    
+  
+
+        
+
+     
+</script>
+</section>
+        
+        <section class="itp-section">
+          <h3>Stock Movements</h3>
+          <div class="itp-search-bar">
+            <input type="text" placeholder="Search movements..." />
+            <button class="itp-btn itp-btn-primary">Search</button>
+            <button class="itp-btn itp-btn-secondary">Add Movement</button>
+          </div>
+          <div class="itp-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Movement ID</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Date</th>
+                  <th>Reference</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                </td>
+                <tr>
+                  <td>MOV-001</td>
+                  <td>Beef</td>
+                  <td>250</td>
+                  <td>2022-01-29</td>
+                  <td>N</td>
+                  <td class="itp-table-actions">
+                    <button class="itp-btn itp-btn-secondary">Edit</button>
+                    <button class="itp-btn itp-btn-primary">Delete</button>
+                  </td>
+
+
+
+                  </tr>
+                  </td>
+
+   
+                  
