@@ -3,133 +3,387 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MeatTrack Pro | Meat Product Data</title>
-    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
-    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <title>MeatTrack Pro | Livestock </title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
-      body {
-        background: var(--mtp-gray);
+      :root {
+        --itp-red: #ae2b2b;
+        --itp-green: #2f6d2f;
+        --itp-dark: #232d2d;
+        --itp-light: #ffffff;
+        --itp-gray: #f5f5f5;
       }
-      .mtp-dashboard-wrapper {
-        display: flex;
-        min-height: 100vh;
+      
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      body { 
+        background: var(--itp-gray); 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
-      .mtp-sidebar {
-        width: 240px;
-        background: var(--mtp-dark);
-        color: var(--mtp-light);
-        display: flex;
-        flex-direction: column;
-        padding: 2rem 1rem 1rem 1rem;
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 100;
+      
+      .itp-dashboard-wrapper { display: flex; min-height: 100vh; }
+      
+      .itp-sidebar { 
+        width: 240px; 
+        background: var(--itp-dark); 
+        color: var(--itp-light); 
+        display: flex; 
+        flex-direction: column; 
+        padding: 2rem 1rem 1rem 1rem; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        bottom: 0; 
+        z-index: 100; 
       }
-      .mtp-sidebar-logo {
-        font-size: 1.5rem;
+      
+      .itp-sidebar-logo { 
+        font-size: 1.5rem; 
+        font-weight: bold; 
+        color: var(--itp-red); 
+        display: flex; 
+        align-items: center; 
+        gap: 0.5rem; 
+        margin-bottom: 2.5rem; 
+      }
+      
+      .itp-sidebar-nav { flex: 1; }
+      
+      .itp-sidebar-nav ul { 
+        list-style: none; 
+        padding: 0; 
+        margin: 0; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 1.2rem; 
+      }
+      
+      .itp-sidebar-nav a { 
+        color: var(--itp-light); 
+        text-decoration: none; 
+        font-size: 1.08rem; 
+        display: flex; 
+        align-items: center; 
+        gap: 0.7rem; 
+        padding: 0.5rem 1rem; 
+        border-radius: 0.5rem; 
+        transition: background 0.18s; 
+      }
+      
+      .itp-sidebar-nav a.active, 
+      .itp-sidebar-nav a:hover { 
+        background: var(--itp-red); 
+        color: var(--itp-light); 
+      }
+      
+      .itp-dashboard-main { 
+        margin-left: 240px; 
+        padding: 2.5rem 2rem 2rem 2rem; 
+        width: 100%; 
+      }
+       .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
+      }
+      .modal-content {
+            background-color: white;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+            position: relative;
+        }
+      .itp-dashboard-header {
+        font-size: 2rem;
         font-weight: bold;
-        color: var(--mtp-red);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 2.5rem;
+        color: var(--itp-dark);
+        margin-bottom: 2rem;
       }
-      .mtp-sidebar-nav {
-        flex: 1;
-      }
-      .mtp-sidebar-nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
-      }
-      .mtp-sidebar-nav a {
-        color: var(--mtp-light);
-        text-decoration: none;
-        font-size: 1.08rem;
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        transition: background 0.18s;
-      }
-      .mtp-sidebar-nav a.active, .mtp-sidebar-nav a:hover {
-        background: var(--mtp-red);
-        color: var(--mtp-light);
-      }
-      .mtp-dashboard-main {
-        margin-left: 240px;
-        padding: 2.5rem 2rem 2rem 2rem;
-        width: 100%;
-      }
+      
       @media (max-width: 900px) {
-        .mtp-dashboard-main {
-          margin-left: 0;
-          padding: 1.2rem 0.5rem;
+        .itp-dashboard-main { 
+          margin-left: 0; 
+          padding: 1.2rem 0.5rem; 
         }
-        .mtp-sidebar {
-          position: static;
-          width: 100%;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1rem;
+        .itp-sidebar { 
+          position: static; 
+          width: 100%; 
+          flex-direction: row; 
+          align-items: center; 
+          justify-content: space-between; 
+          padding: 1rem; 
         }
-        .mtp-sidebar-nav ul {
-          flex-direction: row;
-          gap: 0.7rem;
+        .itp-sidebar-nav ul { 
+          flex-direction: row; 
+          gap: 0.7rem; 
         }
       }
-      .mtp-section { background: var(--mtp-light); border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 2rem 1.2rem; margin-bottom: 2rem; }
-      .mtp-section h3 { color: var(--mtp-green); margin-bottom: 1rem; font-size: 1.2rem; }
-      .mtp-table-wrapper { overflow-x: auto; }
-      table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
-      th, td { padding: 0.7rem; border-bottom: 1px solid #eee; text-align: left; }
-      th { background: var(--mtp-gray); color: var(--mtp-dark); }
-      .mtp-table-actions button { margin-right: 0.5rem; }
-      .mtp-search-bar { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
-      .mtp-search-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
-      .mtp-section .mtp-btn { margin-bottom: 1rem; }
-      .mtp-charts-flex { display: flex; flex-wrap: wrap; gap: 2rem; }
-      .mtp-chart-container { flex: 1 1 300px; min-width: 300px; background: #fafafa; border-radius: 1rem; padding: 1rem; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
-      .mtp-logout-btn {
-        border: 2px solid var(--mtp-red);
-        color: var(--mtp-red);
-        background: transparent;
+      
+      .itp-section { 
+        background: var(--itp-light); 
+        border-radius: 1rem; 
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08); 
+        padding: 2rem 1.2rem; 
+        margin-bottom: 2rem; 
+      }
+      
+      .itp-section h3 { 
+        color: var(--itp-green); 
+        margin-bottom: 1rem; 
+        font-size: 1.2rem; 
+      }
+      
+      .itp-table-wrapper { overflow-x: auto; }
+      
+      table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-bottom: 1rem; 
+      }
+      
+      th, td { 
+        padding: 0.7rem; 
+        border-bottom: 1px solid #eee; 
+        text-align: left; 
+      }
+      
+      th { 
+        background: var(--itp-gray); 
+        color: var(--itp-dark); 
         font-weight: 600;
-        margin-top: 2rem;
-        transition: background 0.2s, color 0.2s;
       }
-      .mtp-logout-btn:hover {
-        background: var(--mtp-red);
-        color: var(--mtp-light);
+      
+      .itp-table-actions button { margin-right: 0.5rem; }
+      
+      .itp-search-bar { 
+        margin-bottom: 1rem; 
+        display: flex; 
+        gap: 0.5rem; 
+        flex-wrap: wrap;
       }
-      @media (max-width: 900px) {
-        .mtp-logout-btn {
-          margin-top: 0.5rem;
-          margin-left: 1rem;
-          display: inline-block;
+      
+      .itp-search-bar input { 
+        padding: 0.5rem; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        width: 200px; 
+      }
+      
+      .itp-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      
+      .itp-btn-primary {
+        background: var(--itp-red);
+        color: var(--itp-light);
+      }
+      
+      .itp-btn-primary:hover {
+        background: #8b1a1a;
+      }
+      
+      .itp-btn-secondary {
+        background: var(--itp-green);
+        color: var(--itp-light);
+      }
+      
+      .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+      }
+      .itp-charts-flex { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 2rem; 
+      }
+      body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+      
+     
+      .chart-container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap; /* Optional: makes it responsive */
+    }
+     .chart-box {
+      background: #f8f8f8;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+     .btn-success {
+            background: linear-gradient(135deg, #243b19, #50d7aa);
+            color: white;
         }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(86, 171, 47, 0.4);
+        }
+
+        .btn-danger {
+            background:  #da1744;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.4);
+        }
+         .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ff416c;
+        }
+
+    
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+    canvas {
+      width: 400px !important;
+      height: 400px !important;
+    }
+
+      
+      .itp-logout-btn { 
+        border: 2px solid var(--itp-red); 
+        color: var(--itp-red); 
+        background: transparent; 
+        font-weight: 600; 
+        margin-top: 2rem; 
+        transition: background 0.2s, color 0.2s; 
+      }
+      
+      .itp-logout-btn:hover { 
+        background: var(--itp-red); 
+        color: var(--itp-light); 
+      }
+      
+      .status-badge {
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      
+      .status-in-stock {
+        background: #d4edda;
+        color: #155724;
+      }
+      
+      .status-low-stock {
+        background: #fff3cd;
+        color: #856404;
+      }
+      
+      .status-out-stock {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      
+      @media (max-width: 900px) { 
+        .itp-logout-btn { 
+          margin-top: 0.5rem; 
+          margin-left: 1rem; 
+          display: inline-block; 
+        } 
       }
     </style>
   </head>
+  <script>
+  function openModal() {
+    document.getElementById('recordModal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('recordModal').style.display = 'none';
+  }
+
+  // Optional: close modal when clicking outside of modal content
+  window.onclick = function(event) {
+    const modal = document.getElementById('recordModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>
+
   <body>
-    <div class="mtp-dashboard-wrapper">
-      <aside class="mtp-sidebar">
-        <div class="mtp-sidebar-logo">
-          <i class="fas fa-drumstick-bite"></i>
+    <div class="itp-dashboard-wrapper">
+      <aside class="itp-sidebar">
+        <div class="itp-sidebar-logo">
+          <i class="fas fa-boxes"></i>
           <span>MeatTrack Pro</span>
         </div>
-        <nav class="mtp-sidebar-nav">
+        <nav class="itp-sidebar-nav">
           <ul>
-            <li><a href="meat-data.html" class="active"><i class="fas fa-info-circle"></i>Stock Levels Product <Data></Data></a></li>
+            <li><a href="meat-data.html"><i class="fas fa-info-circle"></i>Meat Product Data</a></li>
             <li><a href="incoming.html"><i class="fas fa-truck-loading"></i>Incoming Livestock/Meat</a></li>
             <li><a href="stock.html"><i class="fas fa-warehouse"></i>Stock Levels</a></li>
             <li><a href="expiration.html"><i class="fas fa-calendar-alt"></i>Expiration & Batch</a></li>
@@ -137,20 +391,29 @@
             <li><a href="yield.html"><i class="fas fa-chart-line"></i>Yield Analysis</a></li>
             <li><a href="compliance.html"><i class="fas fa-clipboard-check"></i>Compliance & Recall</a></li>
           </ul>
-          <a href="index.html" class="mtp-btn mtp-btn-outline mtp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+          <a href="index.html" class="itp-btn itp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
         </nav>
       </aside>
-      <main class="mtp-dashboard-main">
-        <div class="mtp-dashboard-header">Stock Level Product Data</div>
-        <section class="mtp-section">
-          <h3>Stock Levels Product List</h3>
-          <div class="mtp-search-bar">
-            <input type="text" placeholder="Search products..." />
-            <button class="mtp-btn mtp-btn-primary">Search</button>
-            <button class="mtp-btn mtp-btn-secondary">Add Product</button>
+      
+      <main class="itp-dashboard-main">
+        <div class="itp-dashboard-header">stock Levels</div>
+        
+        <section class="itp-section">
+          <h3>Inventory Stock Levels</h3>
+          <div class="itp-search-bar">
+            <input type="text" class="search-box" placeholder="Search " id="searchInput">
+                <button class="itp-btn itp-btn-primary" onclick="searchTable()"> Search</button>
+                <button class="itp-btn itp-btn-secondary" onclick="openModal()">Add New Record</button>
+
+        
           </div>
-          <div class="mtp-table-wrapper">
-            <table id="datatablesSimple">
+          <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                DataTable Example
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple">
                                     <thead>
                                         <tr>
                                             <th>Item Name</th>
@@ -553,7 +816,7 @@
                                             <td>05/12/2025</td>
                                             <td>372/=,15000/=</td>
                                         </tr>
-<tr>
+                                        <tr>
                                             <td>Chicken</td>
                                             <td>AD32</td>
                                             <td>Fresh</td>
@@ -618,33 +881,83 @@
                                         </tr>
                                     </tbody>
                                 </table>
-          </div>
-        </section>
-        <section class="mtp-section">
-          <h3>Stock Levels</h3>
-          <div class="mtp-charts-flex">
-            <div class="mtp-chart-container">
-              <canvas id="animalTypeChart"></canvas>
-            </div>
-            <div class="mtp-chart-container">
-              <canvas id="shelfLifeChart"></canvas>
-            </div>
-          </div>
-        </section>
-        <section class="mtp-section">
-          <h3>Supplier Breakdown</h3>
-          <div class="mtp-chart-container">
-            <canvas id="supplierChart"></canvas>
-          </div>
-        </section>
-      </main>
+                            </div>
+                        </div>
+        <section>
+           <div id="recordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add New Stock </h2>
+            <form id="recordForm">
+                <div class="form-group">
+                    <label for="TraceableId">Traceable ID:</label>
+                    <input type="text" id="TraceableId" name="TraceableId" required>
+                </div>
+                <div class="form-group">
+                    <label for="livestockType">Stock Type:</label>
+                    <select id="livestockType" name="livestockType" required>
+                        <option value="">Select Type</option>
+                        <option value="Cattle">Mutton</option>
+                        <option value="Goat">Red Chicken</option>
+                        <option value="Sheep">Pigeon</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Buffalo">Buffalo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" min="50" required>
+                </div>
+                <div class="form-group">
+                    <label for="processingDate">Processing Date:</label>
+                    <input type="date" id="processingDate" name="processingDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="processingUnit">Processing Unit:</label>
+                    <select id="processingUnit" name="processingUnit" required>
+                        <option value="">Select Item ID</option>
+                        <option value="AD32 ">AD32</option>
+                        <option value="BA43">BA43</option>
+                        <option value="DA55 ">DA55</option>
+                        <option value="Ax80">Ax80</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="qualityStatus">Quality Status:</label>
+                    <select id="qualityStatus" name="qualityStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="Success">Success</option>
+                        <option value="Stock Out">Stock Out</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Record</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <script>
+          
+      
+    </script>
+</body>
+<h2>Pie Chart</h2>
+ <div class="chart-container">
+    <div class="chart-box">
+      <canvas id="animalTypeChart"></canvas>
+    </div>
+    
+  <canvas id="animalTypeChart" width="80" height="80"></canvas>
+
+</html>
+<script>
+  
       // Animal Type Pie Chart
       new Chart(document.getElementById('animalTypeChart'), {
         type: 'pie',
         data: {
-          labels: ['Beef', 'Chicken', 'Mutton'],
+          labels: ['Success', 'Stock Out', 'Pending'],
           datasets: [{
             data: [10, 7, 5],
             backgroundColor: ['#b22222', '#228b22', '#e57373']
@@ -652,31 +965,332 @@
         },
         options: { plugins: { legend: { position: 'bottom' } } }
       });
-      // Shelf Life Bar Chart
-      new Chart(document.getElementById('shelfLifeChart'), {
-        type: 'bar',
-        data: {
-          labels: ['Beef', 'Poultry', 'Pork'],
-          datasets: [{
-            label: 'Shelf Life (days)',
-            data: [30, 14, 90],
-            backgroundColor: ['#b22222', '#228b22', '#e57373']
-          }]
-        },
-        options: { plugins: { legend: { display: false } } }
-      });
-      // Supplier Doughnut Chart
-      new Chart(document.getElementById('supplierChart'), {
-        type: 'doughnut',
-        data: {
-          labels: ['FarmFresh Ltd.', 'ChickenCo', 'MuttonSupreme'],
-          datasets: [{
-            data: [8, 7, 7],
-            backgroundColor: ['#b22222', '#228b22', '#e57373']
-          }]
-        },
-        options: { plugins: { legend: { position: 'bottom' } } }
-      });
-    </script>
-  </body>
-</html> 
+      
+      
+    
+  
+
+        
+
+     
+</script>
+</section>
+        
+        <section class="itp-section">
+          <h3>Stock Status</h3>
+          <div class="itp-search-bar">
+            <input type="text" placeholder="Search movements..." />
+            <button class="itp-btn itp-btn-primary">Search</button>
+            <button class="itp-btn itp-btn-secondary">Add</button>
+          </div>
+          <div class="itp-table-wrapper">
+            <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name</th>
+                                            <th>Item ID</th>
+                                            <th>Status</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Stock Out</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Pending</td>
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Pending</td>
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Pending</td>
+                                    
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Pending</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Pending</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Stock Out</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Pending</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Chicken</td>
+                                            <td>AD32</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Beef</td>
+                                            <td>BA43</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Buffalo</td>
+                                            <td>DA55</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Red Chicken</td>
+                                            <td>PX21</td>
+                                            <td>Stock Out</td>
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td>Mutton</td>
+                                            <td>Ax80</td>
+                                            <td>Pending</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>Duck</td>
+                                            <td>BM22</td>
+                                            <td>Success</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>pigeon</td>
+                                            <td>AS23</td>
+                                            <td>Stock Out</td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+   
+                  
