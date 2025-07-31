@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Wholesaler Dashboard</title>
+    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <style>
+      body {
+        background: var(--mtp-gray);
+      }
+      .mtp-dashboard-wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
+      .mtp-sidebar {
+        width: 240px;
+        background: var(--mtp-dark);
+        color: var(--mtp-light);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1rem 1rem 1rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+      }
+      .mtp-sidebar-logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--mtp-green);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .mtp-sidebar-nav {
+        flex: 1;
+      }
+      .mtp-sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .mtp-sidebar-nav a {
+        color: var(--mtp-light);
+        text-decoration: none;
+        font-size: 1.08rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: background 0.18s;
+      }
+      .mtp-sidebar-nav a.active, .mtp-sidebar-nav a:hover {
+        background: var(--mtp-green);
+        color: var(--mtp-light);
+      }
+      .mtp-dashboard-main {
+        margin-left: 240px;
+        padding: 2.5rem 2rem 2rem 2rem;
+        width: 100%;
+      }
+      .mtp-dashboard-header {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--mtp-green);
+        margin-bottom: 2rem;
+      }
+      .mtp-dashboard-sections {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 2rem;
+      }
+      .mtp-dashboard-card {
+        background: var(--mtp-light);
+        border-radius: 1rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        padding: 2rem 1.2rem;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .mtp-dashboard-card h3 {
+        color: var(--mtp-green);
+        margin-bottom: 0.7rem;
+        font-size: 1.2rem;
+      }
+      .mtp-dashboard-card .mtp-card-icon {
+        font-size: 2rem;
+        color: var(--mtp-green);
+        margin-bottom: 0.5rem;
+      }
+      .mtp-logout-btn {
+        border: 2px solid var(--mtp-green);
+        color: var(--mtp-green);
+        background: transparent;
+        font-weight: 600;
+        margin-top: 2rem;
+        transition: background 0.2s, color 0.2s;
+      }
+      .mtp-logout-btn:hover {
+        background: var(--mtp-green);
+        color: var(--mtp-light);
+      }
+      @media (max-width: 900px) {
+        .mtp-dashboard-main {
+          margin-left: 0;
+          padding: 1.2rem 0.5rem;
+        }
+        .mtp-sidebar {
+          position: static;
+          width: 100%;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1rem;
+        }
+        .mtp-sidebar-nav ul {
+          flex-direction: row;
+          gap: 0.7rem;
+        }
+        .mtp-logout-btn {
+          margin-top: 0.5rem;
+          margin-left: 1rem;
+          display: inline-block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mtp-dashboard-wrapper">
+      <aside class="mtp-sidebar">
+        <div class="mtp-sidebar-logo">
+          <i class="fas fa-truck"></i>
+          <span>Wholesaler</span>
+        </div>
+        <nav class="mtp-sidebar-nav">
+          <ul>
+            <li><a href="wholesaler-orders.html"><i class="fas fa-clipboard-list"></i>Orders</a></li>
+            <li><a href="wholesaler-shipments.html"><i class="fas fa-shipping-fast"></i>Shipment Tracking</a></li>
+          </ul>
+          <a href="index.html" class="mtp-btn mtp-btn-outline mtp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+      </aside>
+      <main class="mtp-dashboard-main">
+        <div class="mtp-dashboard-header">Wholesaler Dashboard</div>
+        <div class="mtp-dashboard-sections">
+          <section class="mtp-dashboard-card">
+            <div class="mtp-card-icon"><i class="fas fa-clipboard-list"></i></div>
+            <h3>Orders</h3>
+            <ul>
+              <li>View and manage orders</li>
+              <li>Filter by distribution/region</li>
+              <li>Order status tracking</li>
+            </ul>
+          </section>
+          <section class="mtp-dashboard-card">
+            <div class="mtp-card-icon"><i class="fas fa-shipping-fast"></i></div>
+            <h3>Shipment Tracking</h3>
+            <ul>
+              <li>Track shipments to retailers</li>
+              <li>View timestamps and movement</li>
+              <li>Logistics monitoring</li>
+            </ul>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

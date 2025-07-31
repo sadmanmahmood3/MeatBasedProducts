@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Wholesaler Orders</title>
+    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <style>
+      body { background: var(--mtp-gray); }
+      .mtp-dashboard-wrapper { display: flex; min-height: 100vh; }
+      .mtp-dashboard-main { margin-left: 240px; padding: 2.5rem 2rem 2rem 2rem; width: 100%; }
+      @media (max-width: 900px) { .mtp-dashboard-main { margin-left: 0; padding: 1.2rem 0.5rem; } }
+      .mtp-dashboard-header { font-size: 2rem; font-weight: 600; color: var(--mtp-green); margin-bottom: 2rem; }
+      .mtp-section { background: var(--mtp-light); border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 2rem 1.2rem; margin-bottom: 2rem; }
+      .mtp-section h3 { color: var(--mtp-green); margin-bottom: 1rem; font-size: 1.2rem; }
+      .mtp-table-wrapper { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+      th, td { padding: 0.7rem; border-bottom: 1px solid #eee; text-align: left; }
+      th { background: var(--mtp-gray); color: var(--mtp-dark); }
+      .mtp-table-actions button { margin-right: 0.5rem; }
+      .mtp-search-bar { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+      .mtp-search-bar input, .mtp-search-bar select { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+      .mtp-search-bar select { width: 160px; }
+      .mtp-search-bar input { width: 200px; }
+      .mtp-section .mtp-btn { margin-bottom: 1rem; }
+      .mtp-logout-btn { border: 2px solid var(--mtp-green); color: var(--mtp-green); background: transparent; font-weight: 600; margin-top: 2rem; transition: background 0.2s, color 0.2s; }
+      .mtp-logout-btn:hover { background: var(--mtp-green); color: var(--mtp-light); }
+      @media (max-width: 900px) { .mtp-logout-btn { margin-top: 0.5rem; margin-left: 1rem; display: inline-block; } }
+    </style>
+  </head>
+  <body>
+    <div class="mtp-dashboard-wrapper">
+      <aside class="mtp-sidebar">
+        <div class="mtp-sidebar-logo">
+          <i class="fas fa-truck"></i>
+          <span>Wholesaler</span>
+        </div>
+        <nav class="mtp-sidebar-nav">
+          <ul>
+            <li><a href="wholesaler-orders.html" class="active"><i class="fas fa-clipboard-list"></i>Orders</a></li>
+            <li><a href="wholesaler-shipments.html"><i class="fas fa-shipping-fast"></i>Shipment Tracking</a></li>
+          </ul>
+          <a href="index.html" class="mtp-btn mtp-btn-outline mtp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+      </aside>
+      <main class="mtp-dashboard-main">
+        <div class="mtp-dashboard-header">Orders</div>
+        <section class="mtp-section">
+          <h3>Order List</h3>
+          <div class="mtp-search-bar">
+            <input type="text" placeholder="Search orders..." />
+            <select>
+              <option value="">All Regions</option>
+              <option value="North">North</option>
+              <option value="South">South</option>
+              <option value="East">East</option>
+              <option value="West">West</option>
+            </select>
+            <select>
+              <option value="">All Distributions</option>
+              <option value="Metro">Metro</option>
+              <option value="Rural">Rural</option>
+            </select>
+            <button class="mtp-btn mtp-btn-primary">Search</button>
+            <button class="mtp-btn mtp-btn-secondary">Add Order</button>
+          </div>
+          <div class="mtp-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>OrderID</th>
+                  <th>Retailer</th>
+                  <th>Region</th>
+                  <th>Distribution</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                  <th>Order Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ORD-1001</td>
+                  <td>FreshMart</td>
+                  <td>North</td>
+                  <td>Metro</td>
+                  <td>Beef Ribeye</td>
+                  <td>120</td>
+                  <td>Pending</td>
+                  <td>2024-06-05</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ORD-1002</td>
+                  <td>MeatWorld</td>
+                  <td>South</td>
+                  <td>Rural</td>
+                  <td>Pork Belly</td>
+                  <td>80</td>
+                  <td>Shipped</td>
+                  <td>2024-06-04</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ORD-1003</td>
+                  <td>UrbanGrocer</td>
+                  <td>East</td>
+                  <td>Metro</td>
+                  <td>Poultry Breast</td>
+                  <td>200</td>
+                  <td>Delivered</td>
+                  <td>2024-06-03</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Recall Management</title>
+    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <style>
+      body { background: var(--mtp-gray); }
+      .mtp-dashboard-wrapper { display: flex; min-height: 100vh; }
+      .mtp-dashboard-main { margin-left: 240px; padding: 2.5rem 2rem 2rem 2rem; width: 100%; }
+      @media (max-width: 900px) { .mtp-dashboard-main { margin-left: 0; padding: 1.2rem 0.5rem; } }
+      .mtp-dashboard-header { font-size: 2rem; font-weight: 600; color: var(--mtp-green); margin-bottom: 2rem; }
+      .mtp-section { background: var(--mtp-light); border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 2rem 1.2rem; margin-bottom: 2rem; }
+      .mtp-section h3 { color: var(--mtp-green); margin-bottom: 1rem; font-size: 1.2rem; }
+      .mtp-table-wrapper { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+      th, td { padding: 0.7rem; border-bottom: 1px solid #eee; text-align: left; }
+      th { background: var(--mtp-gray); color: var(--mtp-dark); }
+      .mtp-table-actions button { margin-right: 0.5rem; }
+      .mtp-search-bar { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+      .mtp-search-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+      .mtp-section .mtp-btn { margin-bottom: 1rem; }
+      .mtp-logout-btn { border: 2px solid var(--mtp-green); color: var(--mtp-green); background: transparent; font-weight: 600; margin-top: 2rem; transition: background 0.2s, color 0.2s; }
+      .mtp-logout-btn:hover { background: var(--mtp-green); color: var(--mtp-light); }
+      @media (max-width: 900px) { .mtp-logout-btn { margin-top: 0.5rem; margin-left: 1rem; display: inline-block; } }
+    </style>
+  </head>
+  <body>
+    <div class="mtp-dashboard-wrapper">
+      <aside class="mtp-sidebar">
+        <div class="mtp-sidebar-logo">
+          <i class="fas fa-store"></i>
+          <span>Retailer</span>
+        </div>
+        <nav class="mtp-sidebar-nav">
+          <ul>
+            <li><a href="retailer-inventory.html"><i class="fas fa-boxes"></i>Stock Levels</a></li>
+            <li><a href="retailer-recall.html" class="active"><i class="fas fa-undo-alt"></i>Recall Management</a></li>
+          </ul>
+          <a href="index.html" class="mtp-btn mtp-btn-outline mtp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+      </aside>
+      <main class="mtp-dashboard-main">
+        <div class="mtp-dashboard-header">Recall Management</div>
+        <section class="mtp-section">
+          <h3>Batch Tracing</h3>
+          <div class="mtp-search-bar">
+            <input type="text" placeholder="Enter BatchID to trace..." />
+            <button class="mtp-btn mtp-btn-primary">Trace Batch</button>
+          </div>
+          <div class="mtp-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>BatchID</th>
+                  <th>Product</th>
+                  <th>Supplier</th>
+                  <th>Arrival Date</th>
+                  <th>Status</th>
+                  <th>Recall Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>EXP-101</td>
+                  <td>Beef Ribeye</td>
+                  <td>FarmFresh Ltd.</td>
+                  <td>2024-05-20</td>
+                  <td>Recall Issued</td>
+                  <td><button class="mtp-btn mtp-btn-primary">Mark as Removed</button></td>
+                </tr>
+                <tr>
+                  <td>EXP-102</td>
+                  <td>Pork Belly</td>
+                  <td>PorkSupreme</td>
+                  <td>2024-05-25</td>
+                  <td>Normal</td>
+                  <td><button class="mtp-btn mtp-btn-secondary">No Action</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

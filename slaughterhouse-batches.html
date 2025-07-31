@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Batch Processing</title>
+    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        background: var(--mtp-gray);
+      }
+      .mtp-dashboard-wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
+      .mtp-sidebar {
+        width: 240px;
+        background: var(--mtp-dark);
+        color: var(--mtp-light);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1rem 1rem 1rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+      }
+      .mtp-sidebar-logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--mtp-red);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .mtp-sidebar-nav {
+        flex: 1;
+      }
+      .mtp-sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .mtp-sidebar-nav a {
+        color: var(--mtp-light);
+        text-decoration: none;
+        font-size: 1.08rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: background 0.18s;
+      }
+      .mtp-sidebar-nav a.active, .mtp-sidebar-nav a:hover {
+        background: var(--mtp-red);
+        color: var(--mtp-light);
+      }
+      .mtp-dashboard-main {
+        margin-left: 240px;
+        padding: 2.5rem 2rem 2rem 2rem;
+        width: 100%;
+      }
+      @media (max-width: 900px) {
+        .mtp-dashboard-main {
+          margin-left: 0;
+          padding: 1.2rem 0.5rem;
+        }
+        .mtp-sidebar {
+          position: static;
+          width: 100%;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1rem;
+        }
+        .mtp-sidebar-nav ul {
+          flex-direction: row;
+          gap: 0.7rem;
+        }
+      }
+      .mtp-dashboard-header { font-size: 2rem; font-weight: 600; color: var(--mtp-red); margin-bottom: 2rem; }
+      .mtp-section { background: var(--mtp-light); border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 2rem 1.2rem; margin-bottom: 2rem; }
+      .mtp-section h3 { color: var(--mtp-green); margin-bottom: 1rem; font-size: 1.2rem; }
+      .mtp-table-wrapper { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+      th, td { padding: 0.7rem; border-bottom: 1px solid #eee; text-align: left; }
+      th { background: var(--mtp-gray); color: var(--mtp-dark); }
+      .mtp-table-actions button { margin-right: 0.5rem; }
+      .mtp-search-bar { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+      .mtp-search-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+      .mtp-section .mtp-btn { margin-bottom: 1rem; }
+      .mtp-charts-flex { display: flex; flex-wrap: wrap; gap: 2rem; }
+      .mtp-chart-container { flex: 1 1 300px; min-width: 300px; background: #fafafa; border-radius: 1rem; padding: 1rem; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+      .mtp-logout-btn {
+        border: 2px solid var(--mtp-red);
+        color: var(--mtp-red);
+        background: transparent;
+        font-weight: 600;
+        margin-top: 2rem;
+        transition: background 0.2s, color 0.2s;
+      }
+      .mtp-logout-btn:hover {
+        background: var(--mtp-red);
+        color: var(--mtp-light);
+      }
+      @media (max-width: 900px) {
+        .mtp-logout-btn {
+          margin-top: 0.5rem;
+          margin-left: 1rem;
+          display: inline-block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mtp-dashboard-wrapper">
+      <aside class="mtp-sidebar">
+        <div class="mtp-sidebar-logo">
+          <i class="fas fa-industry"></i>
+          <span>Slaughterhouse Pro</span>
+        </div>
+        <nav class="mtp-sidebar-nav">
+          <ul>
+            <li><a href="slaughterhouse-incoming.html"><i class="fas fa-truck-loading"></i>Incoming Livestock</a></li>
+            <li><a href="slaughterhouse-batches.html" class="active"><i class="fas fa-cogs"></i>Batch Processing</a></li>
+            <li><a href="slaughterhouse-yield.html"><i class="fas fa-chart-line"></i>Yield Analytics</a></li>
+          </ul>
+          <a href="index.html" class="mtp-btn mtp-btn-outline mtp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+      </aside>
+      <main class="mtp-dashboard-main">
+        <div class="mtp-dashboard-header">Batch Processing</div>
+        <section class="mtp-section">
+          <h3>Processing Batches</h3>
+          <div class="mtp-search-bar">
+            <input type="text" placeholder="Search batches..." />
+            <button class="mtp-btn mtp-btn-primary">Search</button>
+            <button class="mtp-btn mtp-btn-secondary">Add Batch</button>
+          </div>
+          <div class="mtp-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>BatchID</th>
+                  <th>Animal Type</th>
+                  <th>Gross Weight (kg)</th>
+                  <th>Net Weight (kg)</th>
+                  <th>Processing Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>B-2001</td>
+                  <td>Beef Cattle</td>
+                  <td>450</td>
+                  <td>380</td>
+                  <td>2024-06-01</td>
+                  <td>Completed</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>B-2002</td>
+                  <td>Poultry</td>
+                  <td>2.5</td>
+                  <td>2.1</td>
+                  <td>2024-06-02</td>
+                  <td>In Progress</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>B-2003</td>
+                  <td>Pork</td>
+                  <td>120</td>
+                  <td>95</td>
+                  <td>2024-06-03</td>
+                  <td>Completed</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="mtp-section">
+          <h3>Processing Efficiency</h3>
+          <div class="mtp-charts-flex">
+            <div class="mtp-chart-container">
+              <canvas id="netWeightChart"></canvas>
+            </div>
+            <div class="mtp-chart-container">
+              <canvas id="processingStatusChart"></canvas>
+            </div>
+          </div>
+        </section>
+        <section class="mtp-section">
+          <h3>Daily Processing Volume</h3>
+          <div class="mtp-chart-container">
+            <canvas id="dailyVolumeChart"></canvas>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      // Net Weight by Animal Type Bar Chart
+      new Chart(document.getElementById('netWeightChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Beef Cattle', 'Poultry', 'Pork'],
+          datasets: [{
+            label: 'Net Weight (kg)',
+            data: [380, 2.1, 95],
+            backgroundColor: ['#b22222', '#228b22', '#e57373']
+          }]
+        },
+        options: { plugins: { legend: { display: false } } }
+      });
+      // Processing Status Pie Chart
+      new Chart(document.getElementById('processingStatusChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Completed', 'In Progress', 'Pending'],
+          datasets: [{
+            data: [2, 1, 0],
+            backgroundColor: ['#228b22', '#e57373', '#b22222']
+          }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+      // Daily Processing Volume Line Chart
+      new Chart(document.getElementById('dailyVolumeChart'), {
+        type: 'line',
+        data: {
+          labels: ['2024-06-01', '2024-06-02', '2024-06-03'],
+          datasets: [{
+            label: 'Net Weight Processed (kg)',
+            data: [380, 2.1, 95],
+            borderColor: '#228b22',
+            backgroundColor: 'rgba(34,139,34,0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+    </script>
+  </body>
+</html> 

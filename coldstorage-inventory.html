@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeatTrack Pro | Cold Storage Inventory</title>
+    <link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/meattrackpro.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" />
+    <style>
+      body { background: var(--mtp-gray); }
+      .mtp-dashboard-wrapper { display: flex; min-height: 100vh; }
+      .mtp-dashboard-main { margin-left: 240px; padding: 2.5rem 2rem 2rem 2rem; width: 100%; }
+      @media (max-width: 900px) { .mtp-dashboard-main { margin-left: 0; padding: 1.2rem 0.5rem; } }
+      .mtp-dashboard-header { font-size: 2rem; font-weight: 600; color: var(--mtp-green); margin-bottom: 2rem; }
+      .mtp-section { background: var(--mtp-light); border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 2rem 1.2rem; margin-bottom: 2rem; }
+      .mtp-section h3 { color: var(--mtp-green); margin-bottom: 1rem; font-size: 1.2rem; }
+      .mtp-table-wrapper { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+      th, td { padding: 0.7rem; border-bottom: 1px solid #eee; text-align: left; }
+      th { background: var(--mtp-gray); color: var(--mtp-dark); }
+      .mtp-table-actions button { margin-right: 0.5rem; }
+      .mtp-search-bar { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+      .mtp-search-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+      .mtp-section .mtp-btn { margin-bottom: 1rem; }
+      .mtp-logout-btn { border: 2px solid var(--mtp-green); color: var(--mtp-green); background: transparent; font-weight: 600; margin-top: 2rem; transition: background 0.2s, color 0.2s; }
+      .mtp-logout-btn:hover { background: var(--mtp-green); color: var(--mtp-light); }
+      @media (max-width: 900px) { .mtp-logout-btn { margin-top: 0.5rem; margin-left: 1rem; display: inline-block; } }
+    </style>
+  </head>
+  <body>
+    <div class="mtp-dashboard-wrapper">
+      <aside class="mtp-sidebar">
+        <div class="mtp-sidebar-logo">
+          <i class="fas fa-snowflake"></i>
+          <span>Cold Storage</span>
+        </div>
+        <nav class="mtp-sidebar-nav">
+          <ul>
+            <li><a href="coldstorage-inventory.html" class="active"><i class="fas fa-boxes"></i>Current Inventory</a></li>
+            <li><a href="coldstorage-fefo.html"><i class="fas fa-exclamation-triangle"></i>FEFO Alerts</a></li>
+            <li><a href="coldstorage-reports.html"><i class="fas fa-chart-area"></i>Condition Reports</a></li>
+          </ul>
+          <a href="index.html" class="mtp-btn mtp-btn-outline mtp-logout-btn" style="margin-top:2rem;display:block;text-align:center;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+      </aside>
+      <main class="mtp-dashboard-main">
+        <div class="mtp-dashboard-header">Current Inventory</div>
+        <section class="mtp-section">
+          <h3>Storage Units</h3>
+          <div class="mtp-search-bar">
+            <input type="text" placeholder="Search storage units..." />
+            <button class="mtp-btn mtp-btn-primary">Search</button>
+            <button class="mtp-btn mtp-btn-secondary">Add Storage</button>
+          </div>
+          <div class="mtp-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>StorageID</th>
+                  <th>Location</th>
+                  <th>Temperature (°C)</th>
+                  <th>Humidity (%)</th>
+                  <th>Status</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CS-01</td>
+                  <td>Unit A</td>
+                  <td>-2.5</td>
+                  <td>85</td>
+                  <td>Normal</td>
+                  <td>2024-06-05 10:00</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CS-02</td>
+                  <td>Unit B</td>
+                  <td>-1.8</td>
+                  <td>80</td>
+                  <td>Normal</td>
+                  <td>2024-06-05 10:00</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CS-03</td>
+                  <td>Unit C</td>
+                  <td>0.0</td>
+                  <td>90</td>
+                  <td>Alert</td>
+                  <td>2024-06-05 10:00</td>
+                  <td class="mtp-table-actions">
+                    <button class="mtp-btn mtp-btn-secondary">Update</button>
+                    <button class="mtp-btn mtp-btn-primary">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

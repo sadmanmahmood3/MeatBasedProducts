@@ -142,13 +142,20 @@
         const password = document.getElementById('mtp-login-password').value;
         const errorMessage = document.getElementById('errorMessage');
         
-        // Check credentials
-        if (email === 'admin1@gmail.com' && password === 'admin1') {
-          // Successful login
+        // User credentials and dashboard mapping
+        const users = [
+          { email: 'admin1@gmail.com', password: 'admin1', dashboard: 'admin-dashboard.html' },
+          { email: 'slgh@gmail.com', password: 'slghs', dashboard: 'slaughterhouse-dashboard.html' },
+          { email: 'retailer01@gmail.com', password: 'retailer', dashboard: 'retailer-dashboard.html' },
+          { email: 'coldstorage01@gmail.com', password: 'coldstrg', dashboard: 'coldstorage-dashboard.html' },
+          { email: 'wholesaler33@gmail.com', password: 'whlslr', dashboard: 'wholesaler-dashboard.html' }
+        ];
+        
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
           errorMessage.style.display = 'none';
-          window.location.href = 'admin-dashboard.html';
+          window.location.href = user.dashboard;
         } else {
-          // Failed login
           errorMessage.style.display = 'block';
           document.getElementById('mtp-login-password').value = '';
         }
