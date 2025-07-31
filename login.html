@@ -88,6 +88,16 @@
         font-size: 0.98rem;
         color: #888;
       }
+      .mtp-error-message {
+        color: var(--mtp-red);
+        background: rgba(178,34,34,0.1);
+        border: 1px solid var(--mtp-red);
+        border-radius: 4px;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        display: none;
+      }
       @media (max-width: 500px) {
         .mtp-login-box {
           padding: 1.2rem 0.5rem 1.2rem 0.5rem;
@@ -103,7 +113,8 @@
           <span>MeatTrack Pro</span>
         </div>
         <div class="mtp-login-title">Sign in to your account</div>
-        <form class="mtp-login-form">
+        <div class="mtp-error-message" id="errorMessage">Invalid email or password. Please try again.</div>
+        <form class="mtp-login-form" id="loginForm">
           <div>
             <label for="mtp-login-email">Email</label>
             <input type="email" id="mtp-login-email" name="email" placeholder="Enter your email" required />
@@ -123,5 +134,25 @@
         </div>
       </div>
     </div>
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('mtp-login-email').value;
+        const password = document.getElementById('mtp-login-password').value;
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // Check credentials
+        if (email === 'admin1@gmail.com' && password === 'admin1') {
+          // Successful login
+          errorMessage.style.display = 'none';
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          // Failed login
+          errorMessage.style.display = 'block';
+          document.getElementById('mtp-login-password').value = '';
+        }
+      });
+    </script>
   </body>
 </html> 
