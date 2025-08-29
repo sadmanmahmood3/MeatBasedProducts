@@ -1,18 +1,15 @@
 <?php
-
-$servername = "localhost";
-
+$host = "localhost";
+$port = "3306";
+$dbname = "meat_inventory";
 $username = "root";
-
 $password = "";
 
-$dbname = "meat_inventory";
+$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
-$conn = new mysqli($servername, $username, $password, $dbname, 3306);
-
-if ($conn->connect_error) {
-
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "<script>console.log('Database Connected successfully');</script>";
+try {
+    $pdo = new PDO($dsn, $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
 }
